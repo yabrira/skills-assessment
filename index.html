@@ -8,6 +8,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js for the radar chart -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jsPDF and html2canvas for PDF download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <style>
         /* Custom font and HiBob-inspired color scheme */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
@@ -58,6 +62,7 @@
         .btn-demo { background-color: var(--hibob-purple); }
         .btn-discovery { background-color: var(--hibob-teal); }
         .btn-reset { background-color: var(--hibob-gray); }
+        .btn-download { background-color: var(--hibob-pink); }
 
     </style>
 </head>
@@ -122,31 +127,36 @@
             
             <!-- Analysis Section (Initially Hidden) -->
             <div id="analysisSection" class="hidden opacity-0 transform translate-y-4">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-                    <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 border border-gray-200/80 flex flex-col">
-                        <h2 class="text-2xl font-bold text-center mb-2">Your Skill Profile</h2>
-                        <div class="chart-container flex-grow">
-                            <canvas id="skillRadarChart"></canvas>
-                        </div>
-                         <div class="text-center mt-4 border-t border-gray-200 pt-4">
-                             <p class="font-semibold text-gray-700">
-                                 Average Score: <span id="averageScore" class="text-xl font-bold">0.00</span> / 5.00
-                             </p>
-                         </div>
-                    </div>
-                    <div class="bg-white rounded-2xl shadow-xl p-6 border border-gray-200/80">
-                        <h2 class="text-2xl font-bold text-center mb-6">Your Assessment Analysis</h2>
-                        <div class="space-y-8">
-                            <div>
-                                <h3 id="strengthsTitle" class="text-lg font-semibold mb-3 border-b-2 pb-2">Top Strengths</h3>
-                                <ul id="strengthsContainer" class="space-y-4"></ul>
+                <div id="pdfContent">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+                        <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 border border-gray-200/80 flex flex-col">
+                            <h2 class="text-2xl font-bold text-center mb-2">Your Skill Profile</h2>
+                            <div class="chart-container flex-grow">
+                                <canvas id="skillRadarChart"></canvas>
                             </div>
-                            <div>
-                                <h3 id="improvementsTitle" class="text-lg font-semibold mb-3 border-b-2 pb-2">Top Areas for Improvement</h3>
-                                <ul id="improvementsContainer" class="space-y-4"></ul>
+                             <div class="text-center mt-4 border-t border-gray-200 pt-4">
+                                 <p class="font-semibold text-gray-700">
+                                     Average Score: <span id="averageScore" class="text-xl font-bold">0.00</span> / 5.00
+                                 </p>
+                             </div>
+                        </div>
+                        <div class="bg-white rounded-2xl shadow-xl p-6 border border-gray-200/80">
+                            <h2 class="text-2xl font-bold text-center mb-6">Your Assessment Analysis</h2>
+                            <div class="space-y-8">
+                                <div>
+                                    <h3 id="strengthsTitle" class="text-lg font-semibold mb-3 border-b-2 pb-2">Top Strengths</h3>
+                                    <ul id="strengthsContainer" class="space-y-4"></ul>
+                                </div>
+                                <div>
+                                    <h3 id="improvementsTitle" class="text-lg font-semibold mb-3 border-b-2 pb-2">Top Areas for Improvement</h3>
+                                    <ul id="improvementsContainer" class="space-y-4"></ul>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="mt-8 text-center">
+                    <button id="downloadBtn" class="hibob-btn btn-download">Download Results as PDF</button>
                 </div>
             </div>
         </div>
@@ -186,7 +196,7 @@
                          { level: 7, title: "Determines Specific Capabilities Needed", shortTitle: "Capability Definer", description: "Understanding what the prospect needs to solve the problem, in their own words, before showing features.", question: "How well do I get prospects to articulate the specific capabilities they need *before* I start showing them features?", strengthTip: "You excel at defining solutions. Use this skill to co-create a 'future state' document with the prospect, outlining the required capabilities and outcomes.", improvementTip: "After fully understanding the problem, ask, 'In a perfect world, what would you need to be able to do to make this problem go away?'" },
                          { level: 8, title: "Reengineers Vision", shortTitle: "Vision Re-engineer", description: "Using insights to show the customer a better future state they might not have considered.", question: "How often do I introduce a new, more valuable way of solving the problem that the prospect hadn't thought of?", strengthTip: "You're a true consultant. Develop 'vision generation' plays for your key differentiators and teach the team how to use them to elevate their own discovery calls.", improvementTip: "Once you understand their vision, try saying, 'That's a great approach. Have you considered what might be possible if you could also [introduce a unique outcome your solution provides]?'" },
                          { level: 9, title: "Captures and Reuses Success Scenarios", shortTitle: "Discovery Playmaker", description: "Systematically saving and sharing successful lines of questioning and discovery paths.", question: "Do I have a process for saving and sharing discovery questions that successfully uncovered critical business issues?", strengthTip: "You're building a powerful playbook. Lead a team session to role-play your best discovery scenarios to elevate everyone's skills.", improvementTip: "After a successful discovery call, save the single most effective question you asked into a shared document for your team with a note about the context." },
-                         { level: 10, title: "Integrates, Aligns, and Leverages", shortTitle: "Discovery Strategist", description: "Integrating all discovery skills into a cohesive, repeatable methodology for the entire team.", question: "Is there a culture of coaching and continuous improvement around discovery skills within my team?", strengthTip: "You are a strategic leader. Use your integrated knowledge to create and implement a formal discovery qualification scorecard for your entire organization.", improvementTip: "Offer to mentor a newer team member. Walk them through your discovery process on a live call and provide feedback." }
+                         { level: 10, "title": "Integrates, Aligns, and Leverages", shortTitle: "Discovery Strategist", description: "Integrating all discovery skills into a cohesive, repeatable methodology for the entire team.", question: "Is there a culture of coaching and continuous improvement around discovery skills within my team?", strengthTip: "You are a strategic leader. Use your integrated knowledge to create and implement a formal discovery qualification scorecard for your entire organization.", improvementTip: "Offer to mentor a newer team member. Walk them through your discovery process on a live call and provide feedback." }
                     ]
                 }
             };
@@ -203,7 +213,6 @@
             const assessmentTitle = document.getElementById('assessmentTitle');
             const skillLevelsContainer = document.getElementById('skillLevelsContainer');
             const averageScoreEl = document.getElementById('averageScore');
-            const averageScoreContainer = averageScoreEl.parentElement;
             const ctx = document.getElementById('skillRadarChart').getContext('2d');
             const analysisSection = document.getElementById('analysisSection');
             const strengthsContainer = document.getElementById('strengthsContainer');
@@ -212,6 +221,7 @@
             const improvementsTitle = document.getElementById('improvementsTitle');
             const submitBtn = document.getElementById('submitBtn');
             const resetBtn = document.getElementById('resetBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
             const feedbackMsg = document.getElementById('feedbackMsg');
             const backToHomeBtn = document.getElementById('backToHomeBtn');
 
@@ -222,19 +232,16 @@
                 currentAssessmentData = assessment.data;
                 scores = Array(currentAssessmentData.length).fill(0);
                 
-                // Set theme color
                 const themeColor = assessment.themeColor;
                 submitBtn.style.backgroundColor = themeColor;
                 averageScoreEl.style.color = themeColor;
                 strengthsTitle.style.borderColor = themeColor;
                 strengthsTitle.style.color = themeColor;
                 
-                // Update UI
                 assessmentTitle.textContent = assessment.title;
                 homepage.classList.add('hidden');
                 assessmentPage.classList.remove('hidden');
 
-                // Render and initialize
                 renderAllCards();
                 if (skillChart) skillChart.destroy();
                 initializeChart();
@@ -352,6 +359,30 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             };
 
+            const handleDownload = () => {
+                const { jsPDF } = window.jspdf;
+                const contentToPrint = document.getElementById('pdfContent');
+                
+                html2canvas(contentToPrint, { 
+                    scale: 2, // Higher resolution
+                    backgroundColor: '#ffffff' 
+                }).then(canvas => {
+                    const imgData = canvas.toDataURL('image/png');
+                    const pdf = new jsPDF({
+                        orientation: 'landscape',
+                        unit: 'px',
+                        format: [canvas.width, canvas.height]
+                    });
+                    
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = pdf.internal.pageSize.getHeight();
+                    
+                    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                    const fileName = `${allAssessments[currentAssessmentKey].title.replace(/\s/g, '_')}_Results.pdf`;
+                    pdf.save(fileName);
+                });
+            };
+
             // --- Event Listeners ---
             document.querySelectorAll('.assessment-choice-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
@@ -360,17 +391,16 @@
             });
             
             backToHomeBtn.addEventListener('click', goHome);
-
             skillLevelsContainer.addEventListener('click', (e) => {
                 const starButton = e.target.closest('.star-btn');
                 if (starButton) {
                     handleScoreChange(parseInt(starButton.dataset.index, 10), parseInt(starButton.dataset.rate, 10));
                 }
             });
-
             submitBtn.addEventListener('click', handleSubmit);
             resetBtn.addEventListener('click', handleReset);
+            downloadBtn.addEventListener('click', handleDownload);
         });
     </script>
 </body>
-</html>
+</ht
