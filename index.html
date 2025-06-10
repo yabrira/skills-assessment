@@ -3,90 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Great Demo! Skills Self-Assessment</title>
+    <title>Great Demo! & Discovery Skills Assessment</title>
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js for the radar chart -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Custom font and minor style adjustments */
+        /* Custom font and HiBob-inspired color scheme */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        
+        :root {
+            --hibob-purple: #5C3BFF;
+            --hibob-teal: #00C4B3;
+            --hibob-pink: #E6007E;
+            --hibob-dark: #1E2022;
+            --hibob-light-gray: #F8F9FA;
+            --hibob-gray: #6c757d;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f9fafb; /* bg-gray-50 */
+            background-color: var(--hibob-light-gray);
+            color: var(--hibob-dark);
         }
-        /* Ensure the chart is responsive */
+        h1, h2, h3 {
+             color: var(--hibob-dark);
+        }
         .chart-container {
             position: relative;
             height: 100%;
             width: 100%;
             min-height: 400px;
         }
-        /* Simple transition for the results section */
-        #analysisSection {
-            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        /* Simple transition for sections */
+        #analysisSection, #assessmentPage, #homepage {
+            transition: opacity 0.5s ease-in-out;
         }
+
+        .hibob-btn {
+            color: white;
+            font-weight: bold;
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+            padding-left: 2rem;
+            padding-right: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+        }
+        .hibob-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-demo { background-color: var(--hibob-purple); }
+        .btn-discovery { background-color: var(--hibob-teal); }
+        .btn-reset { background-color: var(--hibob-gray); }
+
     </style>
 </head>
 <body>
 
     <div class="container mx-auto px-4 py-8">
         
-        <!-- Header -->
-        <header class="text-center mb-10">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 tracking-tight">
-                Great Demo! Skills Assessment
-            </h1>
-            <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">
-                Dynamically assess your demo proficiency. Rate all 12 skills, then click "Show Analysis".
-            </p>
-        </header>
-
-        <!-- Skill Levels Questions -->
-        <div id="skillLevelsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Skill level cards will be inserted here by JavaScript -->
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="text-center my-10">
-            <button id="submitBtn" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300">
-                Show Analysis
-            </button>
-            <button id="resetBtn" class="bg-gray-600 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-gray-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300 ml-4">
-                Reset
-            </button>
-            <p id="feedbackMsg" class="text-red-500 mt-4 hidden">Please rate all 12 skills to see your analysis.</p>
-        </div>
-        
-        <!-- Analysis Section (Initially Hidden) -->
-        <div id="analysisSection" class="hidden opacity-0 transform translate-y-4">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-                <!-- Left Column: Assessment Chart -->
-                <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 border border-gray-200/80 flex flex-col">
-                    <h2 class="text-2xl font-bold text-gray-800 text-center mb-2">Your Skill Profile</h2>
-                    <div class="chart-container flex-grow">
-                        <canvas id="skillRadarChart"></canvas>
-                    </div>
-                     <div class="text-center mt-4 border-t border-gray-200 pt-4">
-                         <p class="text-gray-700 font-semibold">
-                             Average Score: <span id="averageScore" class="text-blue-600 text-xl font-bold">0.00</span> / 5.00
-                         </p>
-                     </div>
+        <!-- Homepage Section -->
+        <div id="homepage">
+            <header class="text-center mb-12">
+                <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight">
+                    Skills Self-Assessment
+                </h1>
+                <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-500">
+                    Choose an assessment to begin evaluating and improving your skills.
+                </p>
+            </header>
+            <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Demo Assessment Card -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-200/50 flex flex-col items-center text-center transition-transform transform hover:-translate-y-2">
+                    <h2 class="text-2xl font-bold">Demo Skills Assessment</h2>
+                    <p class="text-gray-600 mt-2 mb-6 flex-grow">Evaluate your ability to create and execute stunning software demonstrations.</p>
+                    <button data-assessment="demo" class="assessment-choice-btn hibob-btn btn-demo">Start Demo Assessment</button>
                 </div>
+                <!-- Discovery Assessment Card -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-200/50 flex flex-col items-center text-center transition-transform transform hover:-translate-y-2">
+                    <h2 class="text-2xl font-bold">Discovery Skills Assessment</h2>
+                    <p class="text-gray-600 mt-2 mb-6 flex-grow">Assess your skills in uncovering customer needs, challenges, and critical business issues.</p>
+                    <button data-assessment="discovery" class="assessment-choice-btn hibob-btn btn-discovery">Start Discovery Assessment</button>
+                </div>
+            </div>
+        </div>
 
-                <!-- Right Column: Results -->
-                <div class="bg-white rounded-2xl shadow-xl p-6 border border-gray-200/80">
-                    <h2 class="text-2xl font-bold text-gray-800 text-center mb-6">Your Assessment Analysis</h2>
-                    <div class="space-y-8">
-                        <!-- Strengths -->
-                        <div>
-                            <h3 class="text-lg font-semibold text-green-700 mb-3 border-b-2 border-green-200 pb-2">Top 3 Strengths</h3>
-                            <ul id="strengthsContainer" class="space-y-4"></ul>
+        <!-- Assessment Page (Initially Hidden) -->
+        <div id="assessmentPage" class="hidden">
+            <!-- Header -->
+            <header class="text-center mb-10 relative">
+                 <button id="backToHomeBtn" class="absolute left-0 top-1/2 -translate-y-1/2 bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-lg hover:bg-gray-300">&larr; Back</button>
+                <h1 id="assessmentTitle" class="text-4xl md:text-5xl font-extrabold tracking-tight">
+                    <!-- Title will be set by JS -->
+                </h1>
+                <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-500">
+                    Rate all skills, then click "Show Analysis".
+                </p>
+            </header>
+
+            <!-- Skill Levels Questions -->
+            <div id="skillLevelsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Skill level cards will be inserted here by JavaScript -->
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="text-center my-10">
+                <button id="submitBtn" class="hibob-btn">
+                    Show Analysis
+                </button>
+                <button id="resetBtn" class="hibob-btn btn-reset ml-4">
+                    Reset
+                </button>
+                <p id="feedbackMsg" class="text-red-500 mt-4 hidden">Please rate all skills to see your analysis.</p>
+            </div>
+            
+            <!-- Analysis Section (Initially Hidden) -->
+            <div id="analysisSection" class="hidden opacity-0 transform translate-y-4">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+                    <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 border border-gray-200/80 flex flex-col">
+                        <h2 class="text-2xl font-bold text-center mb-2">Your Skill Profile</h2>
+                        <div class="chart-container flex-grow">
+                            <canvas id="skillRadarChart"></canvas>
                         </div>
-                        <!-- Improvements -->
-                        <div>
-                            <h3 class="text-lg font-semibold text-red-700 mb-3 border-b-2 border-red-200 pb-2">Top 3 Areas for Improvement</h3>
-                            <ul id="improvementsContainer" class="space-y-4"></ul>
+                         <div class="text-center mt-4 border-t border-gray-200 pt-4">
+                             <p class="font-semibold text-gray-700">
+                                 Average Score: <span id="averageScore" class="text-xl font-bold">0.00</span> / 5.00
+                             </p>
+                         </div>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-xl p-6 border border-gray-200/80">
+                        <h2 class="text-2xl font-bold text-center mb-6">Your Assessment Analysis</h2>
+                        <div class="space-y-8">
+                            <div>
+                                <h3 id="strengthsTitle" class="text-lg font-semibold mb-3 border-b-2 pb-2">Top Strengths</h3>
+                                <ul id="strengthsContainer" class="space-y-4"></ul>
+                            </div>
+                            <div>
+                                <h3 id="improvementsTitle" class="text-lg font-semibold mb-3 border-b-2 pb-2">Top Areas for Improvement</h3>
+                                <ul id="improvementsContainer" class="space-y-4"></ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -96,46 +154,116 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const skillLevelsData = [
-                { level: 1, title: "Follows the Standard Demo Script", shortTitle: "Script Follower", description: "Demonstrations are often generic, feature-focused tours, following a predefined script.", question: "To what extent do my demonstrations follow a rigid, one-size-fits-all script?", strengthTip: "Now that you have the basics, intentionally deviate from the script to address one specific customer point. This shows you're listening.", improvementTip: "Before your next demo, identify one key pain point from discovery. Practice starting your demo by showing the solution to that single pain point first." },
-                { level: 2, title: "Customizes Based on Prospect's Market/Industry", shortTitle: "Industry Customizer", description: "Tailoring the demo with industry-specific terminology, data, and examples.", question: "How consistently do I use demo environments and data sets that reflect the prospect's industry?", strengthTip: "Use your industry knowledge to proactively bring up relevant trends or challenges the prospect might not have mentioned, establishing yourself as a thought leader.", improvementTip: "Create a simple checklist of 3-5 industry-specific terms or data points. Ensure your next demo in that vertical includes at least three of them." },
-                { level: 3, title: "Customizes Based on Discovery Information", shortTitle: "Discovery-Led", description: "Incorporating specific details learned during discovery to address the prospect's stated challenges and goals.", question: "How effectively do I use the information gathered in discovery to shape the narrative of my demo?", strengthTip: "Leverage your deep understanding to create a 'champion enablement' summary they can share internally, making it easy for them to sell on your behalf.", improvementTip: "Use a 'Situation Slide' at the beginning of your demo. State the prospect's key challenge back to them and ask, 'Is this correct?'. This forces customization." },
-                { level: 4, title: "Communicates Tangible Business Value", shortTitle: "Value Communicator", description: "Articulating the concrete business outcomes and value the prospect will gain.", question: "How clearly do I connect product features to specific, tangible business value for the customer?", strengthTip: "Turn your value statements into ROI calculations. Offer to build a simple business case with the prospect based on the value you've identified.", improvementTip: "For every major feature you show, practice saying the phrase '...which for you means [insert tangible outcome].' (e.g., '...reducing processing time by 50%')." },
-                { level: 5, title: "Differentiates Vision vs. Technical Proof", shortTitle: "Scenario Differentiator", description: "Understanding the prospect's buying stage and tailoring the demo accordingly.", question: "Can I accurately assess whether a prospect needs a 'vision' or 'technical proof' demo?", strengthTip: "Proactively suggest the right type of demo in your meeting agenda (e.g., 'Agenda: Confirm challenges & initial vision generation'). This shows expertise and control.", improvementTip: "Ask during discovery: 'What's the most valuable use of our time? To see the high-level vision or to dive deep into specific capabilities?' Let them decide." },
-                { level: 6, title: "Manages and Explores Prospect Questions", shortTitle: "Question Manager", description: "Strategically managing questions to maintain flow and delving deeper into the intent behind them.", question: "When a prospect asks a question, how often do I explore the 'why' behind it?", strengthTip: "Use your ability to explore questions to pivot the conversation towards one of your key differentiators, turning their query into an opportunity for you.", improvementTip: "When asked a detailed question that could derail you, try responding with: 'Great question. To give you the best answer, could you share what's driving that question?'" },
-                { level: 7, title: "Uses Biased Questions", shortTitle: "Strategic Questioner", description: "Asking questions that highlight your solution's unique strengths, subtly influencing the prospect's buying criteria.", question: "Am I able to formulate questions that lead the prospect to value my solution's unique strengths?", strengthTip: "Coach your sales counterparts on using your biased questions during their discovery calls to better qualify and shape the opportunity before the demo.", improvementTip: "Identify one key differentiator. Craft a question around the *problem* it solves. (e.g., 'How often do your teams need to work in areas with unreliable internet?')." },
-                { level: 8, title: "Applies Storytelling Techniques", shortTitle: "Storyteller", description: "Weaving compelling customer narratives into the demo to make key messages more memorable.", question: "How effectively do I incorporate relevant customer stories to illustrate real-world success?", strengthTip: "Build a personal 'story library.' Record your best 3-5 customer stories and share them with the team so everyone can benefit from your skill.", improvementTip: "Prepare a 30-second story about a customer who faced a similar problem to your prospect. Use the 'Problem-Solution-Result' framework." },
-                { level: 9, title: "Applies Skills to Broad Scenarios", shortTitle: "Adaptable Performer", description: "Adapting the full range of demo skills across various contexts and audiences.", question: "How confident am I delivering effective demos in a variety of settings (e.g., one-on-one, group, virtual)?", strengthTip: "Offer to lead internal training sessions on how to demo to different audiences (e.g., 'Demoing to the C-Suite'), solidifying your expert status.", improvementTip: "For your next demo, consciously identify the primary 'persona' of your audience (Executive, Technical, etc.) and choose one technique that will resonate most." },
-                { level: 10, title: "Captures and Reuses Success", shortTitle: "Knowledge Manager", description: "Systematically capturing and sharing successful demonstration elements for team-wide leverage.", question: "Do I have a process for identifying and saving my most effective demo segments and narratives?", strengthTip: "Analyze your repository of successful demo segments to identify patterns. Share these 'winning plays' with the rest of the team to multiply your impact.", improvementTip: "After your next successful demo, take 5 minutes to record the most impactful 'Illustration' you used. Save it in a shared team location." },
-                { level: 11, title: "Integration and Alignment", shortTitle: "Team Integrator", description: "Ensuring demo skills are part of a shared, practiced methodology within the team.", question: "Are the principles of Great Demo! part of a shared, practiced methodology within my team?", strengthTip: "Lead a peer-review session where the team analyzes a recorded demo together, fostering a collaborative learning environment and raising everyone's skills.", improvementTip: "Ask a peer to watch a recording of your last demo and give you feedback on one specific area, for example, 'How well did I connect features to value?'" },
-                { level: 12, title: "Methodology Master", shortTitle: "Methodology Master", description: "The pinnacle of demonstration excellence, where skills are integrated into a cohesive, team-wide methodology.", question: "Is there a culture of coaching and continuous improvement around demo skills in my organization?", strengthTip: "Create a 'Great Demo! Playbook' for your organization, documenting best practices and providing a clear onboarding path for new hires.", improvementTip: "Mentor a junior team member on one Great Demo! principle. Teaching a concept is one of the most effective ways to master it yourself." }
-            ];
+            const allAssessments = {
+                demo: {
+                    title: "Demo Skills Assessment",
+                    themeColor: "#5C3BFF", // Purple
+                    data: [
+                        { level: 1, title: "Follows the Standard Demo Script", shortTitle: "Script Follower", description: "Demonstrations are often generic, feature-focused tours, following a predefined script.", question: "To what extent do my demonstrations follow a rigid, one-size-fits-all script?", strengthTip: "Now that you have the basics, intentionally deviate from the script to address one specific customer point. This shows you're listening.", improvementTip: "Before your next demo, identify one key pain point from discovery. Practice starting your demo by showing the solution to that single pain point first." },
+                        { level: 2, title: "Customizes Based on Prospect's Market/Industry", shortTitle: "Industry Customizer", description: "Tailoring the demo with industry-specific terminology, data, and examples.", question: "How consistently do I use demo environments and data sets that reflect the prospect's industry?", strengthTip: "Use your industry knowledge to proactively bring up relevant trends or challenges the prospect might not have mentioned, establishing yourself as a thought leader.", improvementTip: "Create a simple checklist of 3-5 industry-specific terms or data points. Ensure your next demo in that vertical includes at least three of them." },
+                        { level: 3, title: "Customizes Based on Discovery Information", shortTitle: "Discovery-Led", description: "Incorporating specific details learned during discovery to address the prospect's stated challenges and goals.", question: "How effectively do I use the information gathered in discovery to shape the narrative of my demo?", strengthTip: "Leverage your deep understanding to create a 'champion enablement' summary they can share internally, making it easy for them to sell on your behalf.", improvementTip: "Use a 'Situation Slide' at the beginning of your demo. State the prospect's key challenge back to them and ask, 'Is this correct?'. This forces customization." },
+                        { level: 4, title: "Communicates Tangible Business Value", shortTitle: "Value Communicator", description: "Articulating the concrete business outcomes and value the prospect will gain.", question: "How clearly do I connect product features to specific, tangible business value for the customer?", strengthTip: "Turn your value statements into ROI calculations. Offer to build a simple business case with the prospect based on the value you've identified.", improvementTip: "For every major feature you show, practice saying the phrase '...which for you means [insert tangible outcome].' (e.g., '...reducing processing time by 50%')." },
+                        { level: 5, title: "Differentiates Vision vs. Technical Proof", shortTitle: "Scenario Differentiator", description: "Understanding the prospect's buying stage and tailoring the demo accordingly.", question: "Can I accurately assess whether a prospect needs a 'vision' or 'technical proof' demo?", strengthTip: "Proactively suggest the right type of demo in your meeting agenda (e.g., 'Agenda: Confirm challenges & initial vision generation'). This shows expertise and control.", improvementTip: "Ask during discovery: 'What's the most valuable use of our time? To see the high-level vision or to dive deep into specific capabilities?' Let them decide." },
+                        { level: 6, title: "Manages and Explores Prospect Questions", shortTitle: "Question Manager", description: "Strategically managing questions to maintain flow and delving deeper into the intent behind them.", question: "When a prospect asks a question, how often do I explore the 'why' behind it?", strengthTip: "Use your ability to explore questions to pivot the conversation towards one of your key differentiators, turning their query into an opportunity for you.", improvementTip: "When asked a detailed question that could derail you, try responding with: 'Great question. To give you the best answer, could you share what's driving that question?'" },
+                        { level: 7, title: "Uses Biased Questions", shortTitle: "Strategic Questioner", description: "Asking questions that highlight your solution's unique strengths, subtly influencing the prospect's buying criteria.", question: "Am I able to formulate questions that lead the prospect to value my solution's unique strengths?", strengthTip: "Coach your sales counterparts on using your biased questions during their discovery calls to better qualify and shape the opportunity before the demo.", improvementTip: "Identify one key differentiator. Craft a question around the *problem* it solves. (e.g., 'How often do your teams need to work in areas with unreliable internet?')." },
+                        { level: 8, title: "Applies Storytelling Techniques", shortTitle: "Storyteller", description: "Weaving compelling customer narratives into the demo to make key messages more memorable.", question: "How effectively do I incorporate relevant customer stories to illustrate real-world success?", strengthTip: "Build a personal 'story library.' Record your best 3-5 customer stories and share them with the team so everyone can benefit from your skill.", improvementTip: "Prepare a 30-second story about a customer who faced a similar problem to your prospect. Use the 'Problem-Solution-Result' framework." },
+                        { level: 9, title: "Applies Skills to Broad Scenarios", shortTitle: "Adaptable Performer", description: "Adapting the full range of demo skills across various contexts and audiences.", question: "How confident am I delivering effective demos in a variety of settings (e.g., one-on-one, group, virtual)?", strengthTip: "Offer to lead internal training sessions on how to demo to different audiences (e.g., 'Demoing to the C-Suite'), solidifying your expert status.", improvementTip: "For your next demo, consciously identify the primary 'persona' of your audience (Executive, Technical, etc.) and choose one technique that will resonate most." },
+                        { level: 10, title: "Captures and Reuses Success", shortTitle: "Knowledge Manager", description: "Systematically capturing and sharing successful demonstration elements for team-wide leverage.", question: "Do I have a process for identifying and saving my most effective demo segments and narratives?", strengthTip: "Analyze your repository of successful demo segments to identify patterns. Share these 'winning plays' with the rest of the team to multiply your impact.", improvementTip: "After your next successful demo, take 5 minutes to record the most impactful 'Illustration' you used. Save it in a shared team location." },
+                        { level: 11, title: "Integration and Alignment", shortTitle: "Team Integrator", description: "Ensuring demo skills are part of a shared, practiced methodology within the team.", question: "Are the principles of Great Demo! part of a shared, practiced methodology within my team?", strengthTip: "Lead a peer-review session where the team analyzes a recorded demo together, fostering a collaborative learning environment and raising everyone's skills.", improvementTip: "Ask a peer to watch a recording of your last demo and give you feedback on one specific area, for example, 'How well did I connect features to value?'" },
+                        { level: 12, title: "Methodology Master", shortTitle: "Methodology Master", description: "The pinnacle of demonstration excellence, where skills are integrated into a cohesive, team-wide methodology.", question: "Is there a culture of coaching and continuous improvement around demo skills in my organization?", strengthTip: "Create a 'Great Demo! Playbook' for your organization, documenting best practices and providing a clear onboarding path for new hires.", improvementTip: "Mentor a junior team member on one Great Demo! principle. Teaching a concept is one of the most effective ways to master it yourself." }
+                    ]
+                },
+                discovery: {
+                    title: "Discovery Skills Assessment",
+                    themeColor: "#00C4B3", // Teal
+                    data: [
+                         { level: 1, title: "Uncovers Statements of Pain", shortTitle: "Pain Identifier", description: "Asking initial questions to identify a prospect's challenges or 'pain points'.", question: "How effectively do I move beyond product-focused questions to uncover a prospect's business pain?", strengthTip: "You're great at finding the initial 'what hurts'. Now, mentor junior team members on how to start these conversations effectively.", improvementTip: "Start your next discovery call with an open-ended question like, 'What are the top 1-2 challenges you're facing with [area of business] right now?'" },
+                         { level: 2, title: "Explores Pain More Deeply", shortTitle: "Pain Explorer", description: "Going beyond the surface to understand the context, frequency, and reasons behind the pain.", question: "When a prospect mentions a pain, how often do I use follow-up questions like 'Why?' or 'Tell me more'?", strengthTip: "Use your skill to create a 'discovery map' during calls, visually connecting pains and their reasons to uncover deeper insights.", improvementTip: "After a prospect states a pain, make your next question 'Can you give me a recent example of when that happened?' to get more context." },
+                         { level: 3, title: "Broadens the Pain", shortTitle: "Pain Broadener", description: "Connecting a single person's pain to a wider group or departmental issue.", question: "How often do I ask questions to see who else in the organization is affected by this problem?", strengthTip: "You're great at showing this isn't an isolated issue. Use this to justify bringing other stakeholders into the conversation, increasing your deal's footprint.", improvementTip: "After exploring a pain, ask 'Is your team the only one facing this, or is this a wider issue for other groups as well?'" },
+                         { level: 4, title: "Investigates the Impact", shortTitle: "Impact Investigator", description: "Understanding the consequences and business implications of the broadened pain.", question: "How well do I connect the broadened pain to its specific business consequences (e.g., project delays)?", strengthTip: "Your ability to articulate impact is key for executive buy-in. Summarize these impacts at the start of your demos to grab their attention immediately.", improvementTip: "Follow up your 'broadening' question with 'And what is the impact of that on the business when it happens?'" },
+                         { level: 5, title: "Quantifies the Pain/Impact", shortTitle: "Pain Quantifier", description: "Assigning metrics (time, money, resources) to the business impact of the pain.", question: "How consistently do I work with prospects to put numbers to their pain (e.g., hours wasted, dollars lost)?", strengthTip: "You're a master at building a business case. Create a simple ROI calculator template that the entire team can use based on your quantification techniques.", improvementTip: "After identifying an impact, ask, 'If you had to estimate, how much time/money does this cost you per week/month?'" },
+                         { level: 6, title: "Connects to Critical Business Issues (CBIs)", shortTitle: "CBI Connector", description: "Linking the quantified pain to the prospect's high-level strategic goals or objectives.", question: "How effectively do I tie the prospect's pain back to one of their company's top-level strategic objectives?", strengthTip: "Your ability to connect to CBIs gets executive attention. Insist on a pre-meeting with your champion to identify the CBI before any C-level demo.", improvementTip: "Before a key meeting, research the company's annual report or press releases to find their stated goals. Then ask, 'How does the challenge we're discussing affect your goal of [stated company goal]?'" },
+                         { level: 7, title: "Determines Specific Capabilities Needed", shortTitle: "Capability Definer", description: "Understanding what the prospect needs to solve the problem, in their own words, before showing features.", question: "How well do I get prospects to articulate the specific capabilities they need *before* I start showing them features?", strengthTip: "You excel at defining solutions. Use this skill to co-create a 'future state' document with the prospect, outlining the required capabilities and outcomes.", improvementTip: "After fully understanding the problem, ask, 'In a perfect world, what would you need to be able to do to make this problem go away?'" },
+                         { level: 8, title: "Reengineers Vision", shortTitle: "Vision Re-engineer", description: "Using insights to show the customer a better future state they might not have considered.", question: "How often do I introduce a new, more valuable way of solving the problem that the prospect hadn't thought of?", strengthTip: "You're a true consultant. Develop 'vision generation' plays for your key differentiators and teach the team how to use them to elevate their own discovery calls.", improvementTip: "Once you understand their vision, try saying, 'That's a great approach. Have you considered what might be possible if you could also [introduce a unique outcome your solution provides]?'" },
+                         { level: 9, title: "Captures and Reuses Success Scenarios", shortTitle: "Discovery Playmaker", description: "Systematically saving and sharing successful lines of questioning and discovery paths.", question: "Do I have a process for saving and sharing discovery questions that successfully uncovered critical business issues?", strengthTip: "You're building a powerful playbook. Lead a team session to role-play your best discovery scenarios to elevate everyone's skills.", improvementTip: "After a successful discovery call, save the single most effective question you asked into a shared document for your team with a note about the context." },
+                         { level: 10, title: "Integrates, Aligns, and Leverages", shortTitle: "Discovery Strategist", description: "Integrating all discovery skills into a cohesive, repeatable methodology for the entire team.", question: "Is there a culture of coaching and continuous improvement around discovery skills within my team?", strengthTip: "You are a strategic leader. Use your integrated knowledge to create and implement a formal discovery qualification scorecard for your entire organization.", improvementTip: "Offer to mentor a newer team member. Walk them through your discovery process on a live call and provide feedback." }
+                    ]
+                }
+            };
 
-            let scores = Array(12).fill(0);
+            // --- State Management ---
+            let currentAssessmentKey = null;
+            let currentAssessmentData = [];
+            let scores = [];
             let skillChart;
 
+            // --- DOM Elements ---
+            const homepage = document.getElementById('homepage');
+            const assessmentPage = document.getElementById('assessmentPage');
+            const assessmentTitle = document.getElementById('assessmentTitle');
             const skillLevelsContainer = document.getElementById('skillLevelsContainer');
             const averageScoreEl = document.getElementById('averageScore');
+            const averageScoreContainer = averageScoreEl.parentElement;
             const ctx = document.getElementById('skillRadarChart').getContext('2d');
             const analysisSection = document.getElementById('analysisSection');
             const strengthsContainer = document.getElementById('strengthsContainer');
             const improvementsContainer = document.getElementById('improvementsContainer');
+            const strengthsTitle = document.getElementById('strengthsTitle');
+            const improvementsTitle = document.getElementById('improvementsTitle');
             const submitBtn = document.getElementById('submitBtn');
             const resetBtn = document.getElementById('resetBtn');
             const feedbackMsg = document.getElementById('feedbackMsg');
+            const backToHomeBtn = document.getElementById('backToHomeBtn');
+
+            // --- Functions ---
+            const loadAssessment = (key) => {
+                currentAssessmentKey = key;
+                const assessment = allAssessments[key];
+                currentAssessmentData = assessment.data;
+                scores = Array(currentAssessmentData.length).fill(0);
+                
+                // Set theme color
+                const themeColor = assessment.themeColor;
+                submitBtn.style.backgroundColor = themeColor;
+                averageScoreEl.style.color = themeColor;
+                strengthsTitle.style.borderColor = themeColor;
+                strengthsTitle.style.color = themeColor;
+                
+                // Update UI
+                assessmentTitle.textContent = assessment.title;
+                homepage.classList.add('hidden');
+                assessmentPage.classList.remove('hidden');
+
+                // Render and initialize
+                renderAllCards();
+                if (skillChart) skillChart.destroy();
+                initializeChart();
+                handleReset(); 
+            };
+
+            const goHome = () => {
+                assessmentPage.classList.add('hidden');
+                homepage.classList.remove('hidden');
+                handleReset();
+                currentAssessmentKey = null;
+                currentAssessmentData = [];
+            };
 
             const createSkillCardHTML = (levelData, index) => {
                 const { level, title, description, question } = levelData;
                 const score = scores[index];
+                const themeColor = allAssessments[currentAssessmentKey].themeColor;
+                
                 let starsHTML = '';
                 for (let i = 1; i <= 5; i++) {
-                    starsHTML += `<button data-index="${index}" data-rate="${i}" class="star-btn transition-transform duration-200 ease-in-out transform hover:scale-125 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 rounded-full p-1" aria-label="Rate ${i} out of 5"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="${score >= i ? 'text-yellow-400 fill-current' : 'text-gray-300'}"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></button>`;
+                    starsHTML += `<button data-index="${index}" data-rate="${i}" class="star-btn transition-transform duration-200 ease-in-out transform hover:scale-125 focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-full p-1" style="--ring-color: ${themeColor}" aria-label="Rate ${i} out of 5"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="${score >= i ? 'text-yellow-400 fill-current' : 'text-gray-300'}"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></button>`;
                 }
-                return `<div class="bg-white/50 backdrop-blur-sm p-5 rounded-xl shadow-md border border-gray-200/50 transition-all duration-300 hover:shadow-lg hover:border-gray-300" data-card-index="${index}"><div class="flex items-start space-x-4"><div class="flex-shrink-0 w-12 h-12 bg-blue-600 text-white flex items-center justify-center rounded-full text-xl font-bold">${level}</div><div class="flex-grow"><h3 class="text-lg font-bold text-gray-800">${title}</h3><p class="text-sm text-gray-600 mt-1">${description}</p></div></div><div class="mt-4 bg-blue-50 p-4 rounded-lg"><p class="text-sm font-semibold text-blue-800 italic">"${question}"</p><div class="flex justify-center items-center space-x-2 mt-3">${starsHTML}</div></div></div>`;
+
+                return `<div class="bg-white/50 backdrop-blur-sm p-5 rounded-xl shadow-md border border-gray-200/50 transition-all duration-300 hover:shadow-lg hover:border-gray-300" data-card-index="${index}"><div class="flex items-start space-x-4"><div class="flex-shrink-0 w-12 h-12 text-white flex items-center justify-center rounded-full text-xl font-bold" style="background-color:${themeColor}">${level}</div><div class="flex-grow"><h3 class="text-lg font-bold">${title}</h3><p class="text-sm text-gray-600 mt-1">${description}</p></div></div><div class="mt-4 bg-gray-50 p-4 rounded-lg"><p class="text-sm font-semibold italic" style="color:${themeColor}">"${question}"</p><div class="flex justify-center items-center space-x-2 mt-3">${starsHTML}</div></div></div>`;
             };
             
             const renderAllCards = () => {
-                skillLevelsContainer.innerHTML = skillLevelsData.map(createSkillCardHTML).join('');
+                skillLevelsContainer.innerHTML = currentAssessmentData.map(createSkillCardHTML).join('');
             };
             
             const updateStarsUI = (index) => {
@@ -145,11 +273,9 @@
                 starButtons.forEach(button => {
                     const rate = parseInt(button.dataset.rate, 10);
                     const starIcon = button.querySelector('svg');
-                    if(scores[index] >= rate) {
-                        starIcon.classList.add('text-yellow-400', 'fill-current'); starIcon.classList.remove('text-gray-300');
-                    } else {
-                        starIcon.classList.remove('text-yellow-400', 'fill-current'); starIcon.classList.add('text-gray-300');
-                    }
+                    starIcon.classList.toggle('text-yellow-400', scores[index] >= rate);
+                    starIcon.classList.toggle('fill-current', scores[index] >= rate);
+                    starIcon.classList.toggle('text-gray-300', scores[index] < rate);
                 });
             };
 
@@ -161,9 +287,13 @@
             };
             
             const showAnalysis = () => {
-                const scoredSkills = skillLevelsData.map((skill, i) => ({ ...skill, score: scores[i], originalIndex: i }));
+                const scoredSkills = currentAssessmentData.map((skill, i) => ({ ...skill, score: scores[i] }));
                 const strengths = [...scoredSkills].sort((a, b) => b.score - a.score).slice(0, 3);
                 const improvements = [...scoredSkills].filter(s => s.score > 0).sort((a, b) => a.score - b.score).slice(0, 3);
+                
+                improvementsTitle.style.borderColor = '#E6007E'; // HiBob Pink
+                improvementsTitle.style.color = '#E6007E';
+
                 strengthsContainer.innerHTML = strengths.map(skill => `<li class="p-3 bg-green-50 rounded-lg"><p class="font-semibold text-green-800">${skill.title}</p><p class="mt-1 text-sm text-green-600 italic"><strong>How to Leverage:</strong> ${skill.strengthTip}</p></li>`).join('');
                 improvementsContainer.innerHTML = improvements.map(skill => `<li class="p-3 bg-red-50 rounded-lg"><p class="font-semibold text-red-800">${skill.title}</p><p class="mt-1 text-sm text-red-600 italic"><strong>Actionable Tip:</strong> ${skill.improvementTip}</p></li>`).join('');
                 analysisSection.classList.remove('hidden');
@@ -174,16 +304,16 @@
             };
 
             const hideAnalysis = () => {
-                 analysisSection.classList.add('opacity-0', 'transform', 'translate-y-4');
-                 setTimeout(() => {
-                    analysisSection.classList.add('hidden');
-                 }, 500);
+                analysisSection.classList.add('opacity-0', 'transform', 'translate-y-4');
+                setTimeout(() => analysisSection.classList.add('hidden'), 500);
             };
 
             const initializeChart = () => {
+                const themeColor = allAssessments[currentAssessmentKey].themeColor;
+                const colorWithOpacity = `${themeColor}99`; // Add 99 for ~60% opacity
                 skillChart = new Chart(ctx, {
                     type: 'radar',
-                    data: { labels: skillLevelsData.map(s => s.shortTitle), datasets: [{ label: 'Your Score', data: scores, backgroundColor: 'rgba(59, 130, 246, 0.6)', borderColor: 'rgba(29, 78, 216, 1)', borderWidth: 2, pointBackgroundColor: 'rgba(29, 78, 216, 1)', pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: 'rgba(29, 78, 216, 1)' }] },
+                    data: { labels: currentAssessmentData.map(s => s.shortTitle), datasets: [{ label: 'Your Score', data: scores, backgroundColor: colorWithOpacity, borderColor: themeColor, borderWidth: 2, pointBackgroundColor: themeColor, pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: themeColor }] },
                     options: { responsive: true, maintainAspectRatio: false, scales: { r: { angleLines: { color: '#d1d5db' }, grid: { color: '#d1d5db' }, pointLabels: { font: { size: 12 }, color: '#4b5563' }, ticks: { beginAtZero: true, max: 5, min: 0, stepSize: 1, display: false }, suggestedMin: 0, suggestedMax: 5 } }, plugins: { legend: { position: 'bottom' }, tooltip: { backgroundColor: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(4px)', titleColor: '#1f2937', bodyColor: '#1f2937', borderColor: '#d1d5db', borderWidth: 1 } } }
                 });
             };
@@ -192,8 +322,10 @@
                 scores[index] = scores[index] === newScore ? 0 : newScore;
                 updateStarsUI(index);
                 updateAverageScore();
-                skillChart.data.datasets[0].data = scores;
-                skillChart.update();
+                if(skillChart) {
+                    skillChart.data.datasets[0].data = scores;
+                    skillChart.update();
+                }
             };
 
             const handleSubmit = () => {
@@ -207,15 +339,27 @@
             };
             
             const handleReset = () => {
+                if (!currentAssessmentData || currentAssessmentData.length === 0) return;
                 scores.fill(0);
                 renderAllCards();
                 updateAverageScore();
-                skillChart.data.datasets[0].data = scores;
-                skillChart.update();
+                if (skillChart) {
+                    skillChart.data.datasets[0].data = scores;
+                    skillChart.update();
+                }
                 hideAnalysis();
                 feedbackMsg.classList.add('hidden');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             };
+
+            // --- Event Listeners ---
+            document.querySelectorAll('.assessment-choice-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    loadAssessment(e.target.dataset.assessment);
+                });
+            });
+            
+            backToHomeBtn.addEventListener('click', goHome);
 
             skillLevelsContainer.addEventListener('click', (e) => {
                 const starButton = e.target.closest('.star-btn');
@@ -226,11 +370,7 @@
 
             submitBtn.addEventListener('click', handleSubmit);
             resetBtn.addEventListener('click', handleReset);
-
-            renderAllCards();
-            initializeChart();
         });
     </script>
-
 </body>
 </html>
