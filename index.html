@@ -20,9 +20,10 @@
             position: relative;
             height: 100%;
             width: 100%;
+            min-height: 400px;
         }
         /* Simple transition for the results section */
-        #resultsSection {
+        #analysisSection {
             transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
         }
     </style>
@@ -37,17 +38,33 @@
                 Great Demo! Skills Assessment
             </h1>
             <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">
-                Dynamically assess your demo proficiency. Rate all 12 skills to see your full analysis.
+                Dynamically assess your demo proficiency. Rate all 12 skills, then click "Show Analysis".
             </p>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        <!-- Skill Levels Questions -->
+        <div id="skillLevelsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Skill level cards will be inserted here by JavaScript -->
+        </div>
 
-            <!-- Left Column: Assessment Chart & Results -->
-            <div class="lg:sticky lg:top-8 flex flex-col gap-8">
-                 <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 border border-gray-200/80 h-full flex flex-col">
+        <!-- Action Buttons -->
+        <div class="text-center my-10">
+            <button id="submitBtn" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                Show Analysis
+            </button>
+            <button id="resetBtn" class="bg-gray-600 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-gray-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300 ml-4">
+                Reset
+            </button>
+            <p id="feedbackMsg" class="text-red-500 mt-4 hidden">Please rate all 12 skills to see your analysis.</p>
+        </div>
+        
+        <!-- Analysis Section (Initially Hidden) -->
+        <div id="analysisSection" class="hidden opacity-0 transform translate-y-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+                <!-- Left Column: Assessment Chart -->
+                <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 border border-gray-200/80 flex flex-col">
                     <h2 class="text-2xl font-bold text-gray-800 text-center mb-2">Your Skill Profile</h2>
-                    <div class="chart-container flex-grow min-h-0 h-[400px]">
+                    <div class="chart-container flex-grow">
                         <canvas id="skillRadarChart"></canvas>
                     </div>
                      <div class="text-center mt-4 border-t border-gray-200 pt-4">
@@ -56,31 +73,23 @@
                          </p>
                      </div>
                 </div>
-                
-                <!-- Results Section (Initially Hidden) -->
-                <div id="resultsSection" class="hidden opacity-0 transform -translate-y-4">
-                    <div class="bg-white rounded-2xl shadow-xl p-6 border border-gray-200/80">
-                        <h2 class="text-2xl font-bold text-gray-800 text-center mb-6">Your Assessment Analysis</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-1 gap-8">
-                            <!-- Strengths -->
-                            <div>
-                                <h3 class="text-lg font-semibold text-green-700 mb-3 border-b-2 border-green-200 pb-2">Top 3 Strengths</h3>
-                                <ul id="strengthsContainer" class="space-y-4"></ul>
-                            </div>
-                            <!-- Improvements -->
-                            <div>
-                                <h3 class="text-lg font-semibold text-red-700 mb-3 border-b-2 border-red-200 pb-2">Top 3 Areas for Improvement</h3>
-                                <ul id="improvementsContainer" class="space-y-4"></ul>
-                            </div>
+
+                <!-- Right Column: Results -->
+                <div class="bg-white rounded-2xl shadow-xl p-6 border border-gray-200/80">
+                    <h2 class="text-2xl font-bold text-gray-800 text-center mb-6">Your Assessment Analysis</h2>
+                    <div class="space-y-8">
+                        <!-- Strengths -->
+                        <div>
+                            <h3 class="text-lg font-semibold text-green-700 mb-3 border-b-2 border-green-200 pb-2">Top 3 Strengths</h3>
+                            <ul id="strengthsContainer" class="space-y-4"></ul>
+                        </div>
+                        <!-- Improvements -->
+                        <div>
+                            <h3 class="text-lg font-semibold text-red-700 mb-3 border-b-2 border-red-200 pb-2">Top 3 Areas for Improvement</h3>
+                            <ul id="improvementsContainer" class="space-y-4"></ul>
                         </div>
                     </div>
                 </div>
-
-            </div>
-          
-            <!-- Right Column: Skill Levels (Dynamically generated) -->
-            <div id="skillLevelsContainer" class="space-y-6">
-                <!-- Skill level cards will be inserted here by JavaScript -->
             </div>
         </div>
     </div>
@@ -108,19 +117,20 @@
             const skillLevelsContainer = document.getElementById('skillLevelsContainer');
             const averageScoreEl = document.getElementById('averageScore');
             const ctx = document.getElementById('skillRadarChart').getContext('2d');
-            const resultsSection = document.getElementById('resultsSection');
+            const analysisSection = document.getElementById('analysisSection');
             const strengthsContainer = document.getElementById('strengthsContainer');
             const improvementsContainer = document.getElementById('improvementsContainer');
+            const submitBtn = document.getElementById('submitBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const feedbackMsg = document.getElementById('feedbackMsg');
 
             const createSkillCardHTML = (levelData, index) => {
                 const { level, title, description, question } = levelData;
                 const score = scores[index];
-                
                 let starsHTML = '';
                 for (let i = 1; i <= 5; i++) {
                     starsHTML += `<button data-index="${index}" data-rate="${i}" class="star-btn transition-transform duration-200 ease-in-out transform hover:scale-125 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 rounded-full p-1" aria-label="Rate ${i} out of 5"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="${score >= i ? 'text-yellow-400 fill-current' : 'text-gray-300'}"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></button>`;
                 }
-
                 return `<div class="bg-white/50 backdrop-blur-sm p-5 rounded-xl shadow-md border border-gray-200/50 transition-all duration-300 hover:shadow-lg hover:border-gray-300" data-card-index="${index}"><div class="flex items-start space-x-4"><div class="flex-shrink-0 w-12 h-12 bg-blue-600 text-white flex items-center justify-center rounded-full text-xl font-bold">${level}</div><div class="flex-grow"><h3 class="text-lg font-bold text-gray-800">${title}</h3><p class="text-sm text-gray-600 mt-1">${description}</p></div></div><div class="mt-4 bg-blue-50 p-4 rounded-lg"><p class="text-sm font-semibold text-blue-800 italic">"${question}"</p><div class="flex justify-center items-center space-x-2 mt-3">${starsHTML}</div></div></div>`;
             };
             
@@ -150,37 +160,24 @@
                 averageScoreEl.textContent = average.toFixed(2);
             };
             
-            const analyzeAndShowResults = () => {
+            const showAnalysis = () => {
                 const scoredSkills = skillLevelsData.map((skill, i) => ({ ...skill, score: scores[i], originalIndex: i }));
-
                 const strengths = [...scoredSkills].sort((a, b) => b.score - a.score).slice(0, 3);
                 const improvements = [...scoredSkills].filter(s => s.score > 0).sort((a, b) => a.score - b.score).slice(0, 3);
-
-                strengthsContainer.innerHTML = strengths.map(skill => `
-                    <li class="p-3 bg-green-50 rounded-lg">
-                        <p class="font-semibold text-green-800">${skill.title}</p>
-                        <p class="mt-1 text-sm text-green-600 italic"><strong>How to Leverage:</strong> ${skill.strengthTip}</p>
-                    </li>
-                `).join('');
-                
-                improvementsContainer.innerHTML = improvements.map(skill => `
-                    <li class="p-3 bg-red-50 rounded-lg">
-                        <p class="font-semibold text-red-800">${skill.title}</p>
-                        <p class="mt-1 text-sm text-red-600 italic"><strong>Actionable Tip:</strong> ${skill.improvementTip}</p>
-                    </li>
-                `).join('');
-
-                resultsSection.classList.remove('hidden');
+                strengthsContainer.innerHTML = strengths.map(skill => `<li class="p-3 bg-green-50 rounded-lg"><p class="font-semibold text-green-800">${skill.title}</p><p class="mt-1 text-sm text-green-600 italic"><strong>How to Leverage:</strong> ${skill.strengthTip}</p></li>`).join('');
+                improvementsContainer.innerHTML = improvements.map(skill => `<li class="p-3 bg-red-50 rounded-lg"><p class="font-semibold text-red-800">${skill.title}</p><p class="mt-1 text-sm text-red-600 italic"><strong>Actionable Tip:</strong> ${skill.improvementTip}</p></li>`).join('');
+                analysisSection.classList.remove('hidden');
                 setTimeout(() => {
-                    resultsSection.classList.remove('opacity-0', 'transform', '-translate-y-4');
+                    analysisSection.classList.remove('opacity-0', 'transform', 'translate-y-4');
+                    analysisSection.scrollIntoView({ behavior: 'smooth' });
                 }, 10);
             };
 
-            const hideResults = () => {
-                 resultsSection.classList.add('opacity-0', 'transform', '-translate-y-4');
+            const hideAnalysis = () => {
+                 analysisSection.classList.add('opacity-0', 'transform', 'translate-y-4');
                  setTimeout(() => {
-                    resultsSection.classList.add('hidden');
-                 }, 500); // Match transition duration
+                    analysisSection.classList.add('hidden');
+                 }, 500);
             };
 
             const initializeChart = () => {
@@ -193,17 +190,31 @@
 
             const handleScoreChange = (index, newScore) => {
                 scores[index] = scores[index] === newScore ? 0 : newScore;
-                
                 updateStarsUI(index);
                 updateAverageScore();
                 skillChart.data.datasets[0].data = scores;
                 skillChart.update();
+            };
 
+            const handleSubmit = () => {
                 if (scores.every(score => score > 0)) {
-                    analyzeAndShowResults();
+                    feedbackMsg.classList.add('hidden');
+                    showAnalysis();
                 } else {
-                    hideResults();
+                    feedbackMsg.classList.remove('hidden');
+                    hideAnalysis();
                 }
+            };
+            
+            const handleReset = () => {
+                scores.fill(0);
+                renderAllCards();
+                updateAverageScore();
+                skillChart.data.datasets[0].data = scores;
+                skillChart.update();
+                hideAnalysis();
+                feedbackMsg.classList.add('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             };
 
             skillLevelsContainer.addEventListener('click', (e) => {
@@ -212,6 +223,9 @@
                     handleScoreChange(parseInt(starButton.dataset.index, 10), parseInt(starButton.dataset.rate, 10));
                 }
             });
+
+            submitBtn.addEventListener('click', handleSubmit);
+            resetBtn.addEventListener('click', handleReset);
 
             renderAllCards();
             initializeChart();
