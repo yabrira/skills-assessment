@@ -63,6 +63,26 @@
         .btn-discovery { background-color: var(--hibob-teal); }
         .btn-reset { background-color: var(--hibob-gray); }
         .btn-download { background-color: var(--hibob-pink); }
+        
+        .freq-btn {
+            border: 2px solid #e5e7eb; /* gray-200 */
+            padding: 0.5rem 0;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            flex-grow: 1;
+            text-align: center;
+            font-size: 0.875rem;
+        }
+        .freq-btn:hover {
+            border-color: var(--theme-color-hover, #cbd5e1); /* gray-300 */
+        }
+        .freq-btn.selected {
+            background-color: var(--theme-color, #3b82f6); /* blue-600 */
+            color: white;
+            border-color: var(--theme-color, #3b82f6);
+            font-weight: bold;
+        }
 
     </style>
 </head>
@@ -81,17 +101,17 @@
                 </p>
             </header>
             <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Demo Assessment Card -->
-                <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-200/50 flex flex-col items-center text-center transition-transform transform hover:-translate-y-2">
-                    <h2 class="text-2xl font-bold">Demo Skills Assessment</h2>
-                    <p class="text-gray-600 mt-2 mb-6 flex-grow">Evaluate your ability to create and execute stunning software demonstrations.</p>
-                    <button data-assessment="demo" class="assessment-choice-btn hibob-btn btn-demo">Start Demo Assessment</button>
-                </div>
                 <!-- Discovery Assessment Card -->
                 <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-200/50 flex flex-col items-center text-center transition-transform transform hover:-translate-y-2">
                     <h2 class="text-2xl font-bold">Discovery Skills Assessment</h2>
                     <p class="text-gray-600 mt-2 mb-6 flex-grow">Assess your skills in uncovering customer needs, challenges, and critical business issues.</p>
                     <button data-assessment="discovery" class="assessment-choice-btn hibob-btn btn-discovery">Start Discovery Assessment</button>
+                </div>
+                <!-- Demo Assessment Card -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg border border-gray-200/50 flex flex-col items-center text-center transition-transform transform hover:-translate-y-2">
+                    <h2 class="text-2xl font-bold">Demo Skills Assessment</h2>
+                    <p class="text-gray-600 mt-2 mb-6 flex-grow">Evaluate your ability to create and execute stunning software demonstrations.</p>
+                    <button data-assessment="demo" class="assessment-choice-btn hibob-btn btn-demo">Start Demo Assessment</button>
                 </div>
             </div>
         </div>
@@ -164,39 +184,41 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            const frequencyOptions = [ { text: "Always", score: 5 }, { text: "Often", score: 4 }, { text: "Sometimes", score: 3 }, { text: "Rarely", score: 2 }, { text: "Never", score: 1 } ];
+            
             const allAssessments = {
                 demo: {
                     title: "Demo Skills Assessment",
                     themeColor: "#5C3BFF", // Purple
                     data: [
-                        { level: 1, title: "Follows the Standard Demo Script", shortTitle: "Script Follower", description: "Demonstrations are often generic, feature-focused tours, following a predefined script.", question: "To what extent do my demonstrations follow a rigid, one-size-fits-all script?", strengthTip: "Now that you have the basics, intentionally deviate from the script to address one specific customer point. This shows you're listening.", improvementTip: "Before your next demo, identify one key pain point from discovery. Practice starting your demo by showing the solution to that single pain point first." },
-                        { level: 2, title: "Customizes Based on Prospect's Market/Industry", shortTitle: "Industry Customizer", description: "Tailoring the demo with industry-specific terminology, data, and examples.", question: "How consistently do I use demo environments and data sets that reflect the prospect's industry?", strengthTip: "Use your industry knowledge to proactively bring up relevant trends or challenges the prospect might not have mentioned, establishing yourself as a thought leader.", improvementTip: "Create a simple checklist of 3-5 industry-specific terms or data points. Ensure your next demo in that vertical includes at least three of them." },
-                        { level: 3, title: "Customizes Based on Discovery Information", shortTitle: "Discovery-Led", description: "Incorporating specific details learned during discovery to address the prospect's stated challenges and goals.", question: "How effectively do I use the information gathered in discovery to shape the narrative of my demo?", strengthTip: "Leverage your deep understanding to create a 'champion enablement' summary they can share internally, making it easy for them to sell on your behalf.", improvementTip: "Use a 'Situation Slide' at the beginning of your demo. State the prospect's key challenge back to them and ask, 'Is this correct?'. This forces customization." },
-                        { level: 4, title: "Communicates Tangible Business Value", shortTitle: "Value Communicator", description: "Articulating the concrete business outcomes and value the prospect will gain.", question: "How clearly do I connect product features to specific, tangible business value for the customer?", strengthTip: "Turn your value statements into ROI calculations. Offer to build a simple business case with the prospect based on the value you've identified.", improvementTip: "For every major feature you show, practice saying the phrase '...which for you means [insert tangible outcome].' (e.g., '...reducing processing time by 50%')." },
-                        { level: 5, title: "Differentiates Vision vs. Technical Proof", shortTitle: "Scenario Differentiator", description: "Understanding the prospect's buying stage and tailoring the demo accordingly.", question: "Can I accurately assess whether a prospect needs a 'vision' or 'technical proof' demo?", strengthTip: "Proactively suggest the right type of demo in your meeting agenda (e.g., 'Agenda: Confirm challenges & initial vision generation'). This shows expertise and control.", improvementTip: "Ask during discovery: 'What's the most valuable use of our time? To see the high-level vision or to dive deep into specific capabilities?' Let them decide." },
-                        { level: 6, title: "Manages and Explores Prospect Questions", shortTitle: "Question Manager", description: "Strategically managing questions to maintain flow and delving deeper into the intent behind them.", question: "When a prospect asks a question, how often do I explore the 'why' behind it?", strengthTip: "Use your ability to explore questions to pivot the conversation towards one of your key differentiators, turning their query into an opportunity for you.", improvementTip: "When asked a detailed question that could derail you, try responding with: 'Great question. To give you the best answer, could you share what's driving that question?'" },
-                        { level: 7, title: "Uses Biased Questions", shortTitle: "Strategic Questioner", description: "Asking questions that highlight your solution's unique strengths, subtly influencing the prospect's buying criteria.", question: "Am I able to formulate questions that lead the prospect to value my solution's unique strengths?", strengthTip: "Coach your sales counterparts on using your biased questions during their discovery calls to better qualify and shape the opportunity before the demo.", improvementTip: "Identify one key differentiator. Craft a question around the *problem* it solves. (e.g., 'How often do your teams need to work in areas with unreliable internet?')." },
-                        { level: 8, title: "Applies Storytelling Techniques", shortTitle: "Storyteller", description: "Weaving compelling customer narratives into the demo to make key messages more memorable.", question: "How effectively do I incorporate relevant customer stories to illustrate real-world success?", strengthTip: "Build a personal 'story library.' Record your best 3-5 customer stories and share them with the team so everyone can benefit from your skill.", improvementTip: "Prepare a 30-second story about a customer who faced a similar problem to your prospect. Use the 'Problem-Solution-Result' framework." },
-                        { level: 9, title: "Applies Skills to Broad Scenarios", shortTitle: "Adaptable Performer", description: "Adapting the full range of demo skills across various contexts and audiences.", question: "How confident am I delivering effective demos in a variety of settings (e.g., one-on-one, group, virtual)?", strengthTip: "Offer to lead internal training sessions on how to demo to different audiences (e.g., 'Demoing to the C-Suite'), solidifying your expert status.", improvementTip: "For your next demo, consciously identify the primary 'persona' of your audience (Executive, Technical, etc.) and choose one technique that will resonate most." },
-                        { level: 10, title: "Captures and Reuses Success", shortTitle: "Knowledge Manager", description: "Systematically capturing and sharing successful demonstration elements for team-wide leverage.", question: "Do I have a process for identifying and saving my most effective demo segments and narratives?", strengthTip: "Analyze your repository of successful demo segments to identify patterns. Share these 'winning plays' with the rest of the team to multiply your impact.", improvementTip: "After your next successful demo, take 5 minutes to record the most impactful 'Illustration' you used. Save it in a shared team location." },
-                        { level: 11, title: "Integration and Alignment", shortTitle: "Team Integrator", description: "Ensuring demo skills are part of a shared, practiced methodology within the team.", question: "Are the principles of Great Demo! part of a shared, practiced methodology within my team?", strengthTip: "Lead a peer-review session where the team analyzes a recorded demo together, fostering a collaborative learning environment and raising everyone's skills.", improvementTip: "Ask a peer to watch a recording of your last demo and give you feedback on one specific area, for example, 'How well did I connect features to value?'" },
-                        { level: 12, title: "Methodology Master", shortTitle: "Methodology Master", description: "The pinnacle of demonstration excellence, where skills are integrated into a cohesive, team-wide methodology.", question: "Is there a culture of coaching and continuous improvement around demo skills in my organization?", strengthTip: "Create a 'Great Demo! Playbook' for your organization, documenting best practices and providing a clear onboarding path for new hires.", improvementTip: "Mentor a junior team member on one Great Demo! principle. Teaching a concept is one of the most effective ways to master it yourself." }
+                        { level: 1, title: "Adapts the Demo", shortTitle: "Adapter", description: "Moves beyond a rigid script to tailor the demo to the audience's specific needs.", question: "How often do my demonstrations adapt beyond a rigid script to meet audience needs?", strengthTip: "You're great at adapting. Use this skill to co-create agendas with prospects, asking them to prioritize topics to ensure every demo is highly relevant.", improvementTip: "Before your next demo, identify one key pain point from discovery. Practice starting your demo by showing the solution to that single pain point first." },
+                        { level: 2, title: "Customizes for Industry", shortTitle: "Industry Customizer", description: "Tailors the demo with industry-specific terminology, data, and examples.", question: "How often do I use demo environments and data sets that reflect the prospect's industry?", strengthTip: "Use your industry knowledge to proactively bring up relevant trends or challenges the prospect might not have mentioned, establishing yourself as a thought leader.", improvementTip: "Create a simple checklist of 3-5 industry-specific terms or data points. Ensure your next demo in that vertical includes at least three of them." },
+                        { level: 3, title: "Uses Discovery Information", shortTitle: "Discovery-Led", description: "Incorporates specific details learned during discovery to address stated challenges and goals.", question: "How often do my demos directly reflect the information gathered in discovery?", strengthTip: "Leverage your deep understanding to create a 'champion enablement' summary they can share internally, making it easy for them to sell on your behalf.", improvementTip: "Use a 'Situation Slide' at the beginning of your demo. State the prospect's key challenge back to them and ask, 'Is this correct?'. This forces customization." },
+                        { level: 4, title: "Communicates Business Value", shortTitle: "Value Communicator", description: "Articulates the concrete business outcomes and value the prospect will gain.", question: "How often do I connect product features to specific, tangible business value for the customer?", strengthTip: "Turn your value statements into ROI calculations. Offer to build a simple business case with the prospect based on the value you've identified.", improvementTip: "For every major feature you show, practice saying the phrase '...which for you means [insert tangible outcome].' (e.g., '...reducing processing time by 50%')." },
+                        { level: 5, title: "Differentiates Demo Types", shortTitle: "Scenario Differentiator", description: "Adjusts the demo style for Vision Generation vs. Technical Proof scenarios.", question: "How often do I accurately assess and deliver the right type of demo (Vision vs. Technical Proof) for the audience?", strengthTip: "Proactively suggest the right type of demo in your meeting agenda (e.g., 'Agenda: Confirm challenges & initial vision generation'). This shows expertise and control.", improvementTip: "Ask during discovery: 'What's the most valuable use of our time? To see the high-level vision or to dive deep into specific capabilities?' Let them decide." },
+                        { level: 6, title: "Explores Questions Deeply", shortTitle: "Question Explorer", description: "Goes beyond answering questions to explore the intent and 'why' behind them.", question: "When a prospect asks a question, how often do I explore the underlying reason before answering?", strengthTip: "Use your ability to explore questions to pivot the conversation towards one of your key differentiators, turning their query into an opportunity for you.", improvementTip: "When asked a detailed question that could derail you, try responding with: 'That's a great question. To give you the best answer, could you share what's driving that question?'" },
+                        { level: 7, title: "Uses Strategic Questions", shortTitle: "Strategic Questioner", description: "Asks questions that highlight the solution's unique strengths, influencing the prospect's buying criteria.", question: "How often do I formulate strategic questions that highlight our solution's unique strengths?", strengthTip: "Coach your sales counterparts on using your biased questions during their discovery calls to better qualify and shape the opportunity before the demo.", improvementTip: "Identify one key differentiator. Craft a question around the *problem* it solves. (e.g., 'How often do your teams need to work in areas with unreliable internet?')." },
+                        { level: 8, title: "Applies Storytelling", shortTitle: "Storyteller", description: "Weaves compelling customer narratives into the demo to make key messages memorable.", question: "How often do I incorporate relevant customer stories to illustrate real-world success?", strengthTip: "Build a personal 'story library.' Record your best 3-5 customer stories and share them with the team so everyone can benefit from your skill.", improvementTip: "Prepare a 30-second story about a customer who faced a similar problem to your prospect. Use the 'Problem-Solution-Result' framework." },
+                        { level: 9, title: "Adapts to Scenarios", shortTitle: "Adaptable Performer", description: "Adapts the full range of demo skills across various contexts and audiences.", question: "How often do I successfully adapt my demo style for different audiences and settings (e.g. executive vs. technical)?", strengthTip: "Offer to lead internal training sessions on how to demo to different audiences (e.g., 'Demoing to the C-Suite'), solidifying your expert status.", improvementTip: "For your next demo, consciously identify the primary 'persona' of your audience and choose one technique that will resonate most." },
+                        { level: 10, "title": "Captures and Reuses Content", shortTitle: "Knowledge Manager", description: "Systematically captures and shares successful demonstration elements for team-wide leverage.", question: "How often do I follow a process to capture and reuse successful demo segments?", strengthTip: "Analyze your repository of successful demo segments to identify patterns. Share these 'winning plays' with the rest of the team to multiply your impact.", improvementTip: "After your next successful demo, take 5 minutes to record the most impactful 'Illustration' you used. Save it in a shared team location." },
+                        { level: 11, "title": "Practices Team Alignment", shortTitle: "Team Integrator", description: "Ensures demo skills are part of a shared, practiced methodology within the team.", question: "How often do I actively contribute to and use a shared demo methodology with my team?", strengthTip: "Lead a peer-review session where the team analyzes a recorded demo together, fostering a collaborative learning environment and raising everyone's skills.", improvementTip: "Ask a peer to watch a recording of your last demo and give you feedback on one specific area, for example, 'How well did I connect features to value?'" },
+                        { level: 12, "title": "Fosters a Coaching Culture", shortTitle: "Methodology Master", description: "Actively coaches others and refines the team's methodology.", question: "How often do I participate in or foster a culture of coaching and continuous improvement for demos?", strengthTip: "Create a 'Great Demo! Playbook' for your organization, documenting best practices and providing a clear onboarding path for new hires.", improvementTip: "Mentor a junior team member on one Great Demo! principle. Teaching a concept is one of the most effective ways to master it yourself." }
                     ]
                 },
                 discovery: {
                     title: "Discovery Skills Assessment",
                     themeColor: "#00C4B3", // Teal
                     data: [
-                         { level: 1, title: "Uncovers Statements of Pain", shortTitle: "Pain Identifier", description: "Asking initial questions to identify a prospect's challenges or 'pain points'.", question: "How effectively do I move beyond product-focused questions to uncover a prospect's business pain?", strengthTip: "You're great at finding the initial 'what hurts'. Now, mentor junior team members on how to start these conversations effectively.", improvementTip: "Start your next discovery call with an open-ended question like, 'What are the top 1-2 challenges you're facing with [area of business] right now?'" },
-                         { level: 2, title: "Explores Pain More Deeply", shortTitle: "Pain Explorer", description: "Going beyond the surface to understand the context, frequency, and reasons behind the pain.", question: "When a prospect mentions a pain, how often do I use follow-up questions like 'Why?' or 'Tell me more'?", strengthTip: "Use your skill to create a 'discovery map' during calls, visually connecting pains and their reasons to uncover deeper insights.", improvementTip: "After a prospect states a pain, make your next question 'Can you give me a recent example of when that happened?' to get more context." },
-                         { level: 3, title: "Broadens the Pain", shortTitle: "Pain Broadener", description: "Connecting a single person's pain to a wider group or departmental issue.", question: "How often do I ask questions to see who else in the organization is affected by this problem?", strengthTip: "You're great at showing this isn't an isolated issue. Use this to justify bringing other stakeholders into the conversation, increasing your deal's footprint.", improvementTip: "After exploring a pain, ask 'Is your team the only one facing this, or is this a wider issue for other groups as well?'" },
-                         { level: 4, title: "Investigates the Impact", shortTitle: "Impact Investigator", description: "Understanding the consequences and business implications of the broadened pain.", question: "How well do I connect the broadened pain to its specific business consequences (e.g., project delays)?", strengthTip: "Your ability to articulate impact is key for executive buy-in. Summarize these impacts at the start of your demos to grab their attention immediately.", improvementTip: "Follow up your 'broadening' question with 'And what is the impact of that on the business when it happens?'" },
-                         { level: 5, title: "Quantifies the Pain/Impact", shortTitle: "Pain Quantifier", description: "Assigning metrics (time, money, resources) to the business impact of the pain.", question: "How consistently do I work with prospects to put numbers to their pain (e.g., hours wasted, dollars lost)?", strengthTip: "You're a master at building a business case. Create a simple ROI calculator template that the entire team can use based on your quantification techniques.", improvementTip: "After identifying an impact, ask, 'If you had to estimate, how much time/money does this cost you per week/month?'" },
-                         { level: 6, title: "Connects to Critical Business Issues (CBIs)", shortTitle: "CBI Connector", description: "Linking the quantified pain to the prospect's high-level strategic goals or objectives.", question: "How effectively do I tie the prospect's pain back to one of their company's top-level strategic objectives?", strengthTip: "Your ability to connect to CBIs gets executive attention. Insist on a pre-meeting with your champion to identify the CBI before any C-level demo.", improvementTip: "Before a key meeting, research the company's annual report or press releases to find their stated goals. Then ask, 'How does the challenge we're discussing affect your goal of [stated company goal]?'" },
-                         { level: 7, title: "Determines Specific Capabilities Needed", shortTitle: "Capability Definer", description: "Understanding what the prospect needs to solve the problem, in their own words, before showing features.", question: "How well do I get prospects to articulate the specific capabilities they need *before* I start showing them features?", strengthTip: "You excel at defining solutions. Use this skill to co-create a 'future state' document with the prospect, outlining the required capabilities and outcomes.", improvementTip: "After fully understanding the problem, ask, 'In a perfect world, what would you need to be able to do to make this problem go away?'" },
-                         { level: 8, title: "Reengineers Vision", shortTitle: "Vision Re-engineer", description: "Using insights to show the customer a better future state they might not have considered.", question: "How often do I introduce a new, more valuable way of solving the problem that the prospect hadn't thought of?", strengthTip: "You're a true consultant. Develop 'vision generation' plays for your key differentiators and teach the team how to use them to elevate their own discovery calls.", improvementTip: "Once you understand their vision, try saying, 'That's a great approach. Have you considered what might be possible if you could also [introduce a unique outcome your solution provides]?'" },
-                         { level: 9, title: "Captures and Reuses Success Scenarios", shortTitle: "Discovery Playmaker", description: "Systematically saving and sharing successful lines of questioning and discovery paths.", question: "Do I have a process for saving and sharing discovery questions that successfully uncovered critical business issues?", strengthTip: "You're building a powerful playbook. Lead a team session to role-play your best discovery scenarios to elevate everyone's skills.", improvementTip: "After a successful discovery call, save the single most effective question you asked into a shared document for your team with a note about the context." },
-                         { level: 10, "title": "Integrates, Aligns, and Leverages", shortTitle: "Discovery Strategist", description: "Integrating all discovery skills into a cohesive, repeatable methodology for the entire team.", question: "Is there a culture of coaching and continuous improvement around discovery skills within my team?", strengthTip: "You are a strategic leader. Use your integrated knowledge to create and implement a formal discovery qualification scorecard for your entire organization.", improvementTip: "Offer to mentor a newer team member. Walk them through your discovery process on a live call and provide feedback." }
+                         { level: 1, title: "Uncovers Business Pain", shortTitle: "Pain Identifier", description: "Effectively uncovers a prospect's business challenges or 'pain points'.", question: "How often do I effectively move beyond product-focused questions to uncover a prospect's business pain?", strengthTip: "You're great at finding the initial 'what hurts'. Now, mentor junior team members on how to start these conversations effectively.", improvementTip: "Start your next discovery call with an open-ended question like, 'What are the top 1-2 challenges you're facing with [area of business] right now?'" },
+                         { level: 2, title: "Explores Pain Deeply", shortTitle: "Pain Explorer", description: "Goes beyond the surface to understand the context, frequency, and reasons behind the pain.", question: "When a prospect states a pain, how often do I use follow-up questions like 'Why?' or 'Tell me more' to understand it fully?", strengthTip: "Use your skill to create a 'discovery map' during calls, visually connecting pains and their reasons to uncover deeper insights.", improvementTip: "After a prospect states a pain, make your next question 'Can you give me a recent example of when that happened?' to get more context." },
+                         { level: 3, title: "Broadens the Pain", shortTitle: "Pain Broadener", description: "Connects a single person's pain to a wider group or departmental issue.", question: "How often do I successfully broaden a discovered pain to understand its wider organizational impact?", strengthTip: "You're great at showing this isn't an isolated issue. Use this to justify bringing other stakeholders into the conversation, increasing your deal's footprint.", improvementTip: "After exploring a pain, ask 'Is your team the only one facing this, or is this a wider issue for other groups as well?'" },
+                         { level: 4, title: "Investigates Business Impact", shortTitle: "Impact Investigator", description: "Understands the consequences and business implications of the broadened pain.", question: "How often do I connect the broadened pain to its specific business consequences (e.g., project delays, cost overruns)?", strengthTip: "Your ability to articulate impact is key for executive buy-in. Summarize these impacts at the start of your demos to grab their attention immediately.", improvementTip: "Follow up your 'broadening' question with 'And what is the impact of that on the business when it happens?'" },
+                         { level: 5, title: "Quantifies the Pain", shortTitle: "Pain Quantifier", description: "Assigns metrics (time, money, resources) to the business impact of the pain.", question: "How often do I work with prospects to put tangible numbers to their pain (e.g., hours wasted, dollars lost)?", strengthTip: "You're a master at building a business case. Create a simple ROI calculator template that the entire team can use based on your quantification techniques.", improvementTip: "After identifying an impact, ask, 'If you had to estimate, how much time/money does this cost you per week/month?'" },
+                         { level: 6, title: "Connects to Critical Business Issues", shortTitle: "CBI Connector", description: "Links the quantified pain to the prospect's high-level strategic goals or objectives.", question: "How often do I successfully tie the prospect's pain back to one of their company's top-level strategic objectives?", strengthTip: "Your ability to connect to CBIs gets executive attention. Insist on a pre-meeting with your champion to identify the CBI before any C-level demo.", improvementTip: "Before a key meeting, research the company's annual report or press releases to find their stated goals. Then ask, 'How does the challenge we're discussing affect your goal of [stated company goal]?'" },
+                         { level: 7, title: "Defines Needed Capabilities", shortTitle: "Capability Definer", description: "Gets prospects to state what they need to solve the problem, in their own words.", question: "How often do I get prospects to articulate the specific capabilities they need *before* I start showing them features?", strengthTip: "You excel at defining solutions. Use this skill to co-create a 'future state' document with the prospect, outlining the required capabilities and outcomes.", improvementTip: "After fully understanding the problem, ask, 'In a perfect world, what would you need to be able to do to make this problem go away?'" },
+                         { level: 8, title: "Reengineers Vision", shortTitle: "Vision Re-engineer", description: "Uses insights to show the customer a better future state they might not have considered.", question: "How often do I introduce a new, more valuable way of solving the problem that the prospect hadn't thought of?", strengthTip: "You're a true consultant. Develop 'vision generation' plays for your key differentiators and teach the team how to use them to elevate their own discovery calls.", improvementTip: "Once you understand their vision, try saying, 'That's a great approach. Have you considered what might be possible if you could also [introduce a unique outcome your solution provides]?'" },
+                         { level: 9, title: "Captures Success Scenarios", shortTitle: "Discovery Playmaker", description: "Systematically saving and sharing successful lines of questioning and discovery paths.", question: "How often do I follow a process to save and share successful discovery questions and plays?", strengthTip: "You're building a powerful playbook. Lead a team session to role-play your best discovery scenarios to elevate everyone's skills.", improvementTip: "After a successful discovery call, save the single most effective question you asked into a shared document for your team with a note about the context." },
+                         { level: 10, "title": "Integrates and Coaches", shortTitle: "Discovery Strategist", description: "Integrating all discovery skills into a cohesive methodology and coaching others.", question: "How often do I participate in or foster a culture of coaching and continuous improvement for discovery?", strengthTip: "You are a strategic leader. Use your integrated knowledge to create and implement a formal discovery qualification scorecard for your entire organization.", improvementTip: "Offer to mentor a newer team member. Walk them through your discovery process on a live call and provide feedback." }
                     ]
                 }
             };
@@ -237,7 +259,10 @@
                 averageScoreEl.style.color = themeColor;
                 strengthsTitle.style.borderColor = themeColor;
                 strengthsTitle.style.color = themeColor;
-                
+                document.documentElement.style.setProperty('--theme-color', themeColor);
+                document.documentElement.style.setProperty('--theme-color-hover', `${themeColor}20`);
+
+
                 assessmentTitle.textContent = assessment.title;
                 homepage.classList.add('hidden');
                 assessmentPage.classList.remove('hidden');
@@ -261,35 +286,35 @@
                 const score = scores[index];
                 const themeColor = allAssessments[currentAssessmentKey].themeColor;
                 
-                let starsHTML = '';
-                for (let i = 1; i <= 5; i++) {
-                    starsHTML += `<button data-index="${index}" data-rate="${i}" class="star-btn transition-transform duration-200 ease-in-out transform hover:scale-125 focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-full p-1" style="--ring-color: ${themeColor}" aria-label="Rate ${i} out of 5"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="${score >= i ? 'text-yellow-400 fill-current' : 'text-gray-300'}"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></button>`;
-                }
+                const freqHTML = frequencyOptions.map(({ text, score: btnScore }) => 
+                    `<button data-index="${index}" data-score="${btnScore}" class="freq-btn ${score === btnScore ? 'selected' : ''}">${text}</button>`
+                ).join('');
 
-                return `<div class="bg-white/50 backdrop-blur-sm p-5 rounded-xl shadow-md border border-gray-200/50 transition-all duration-300 hover:shadow-lg hover:border-gray-300" data-card-index="${index}"><div class="flex items-start space-x-4"><div class="flex-shrink-0 w-12 h-12 text-white flex items-center justify-center rounded-full text-xl font-bold" style="background-color:${themeColor}">${level}</div><div class="flex-grow"><h3 class="text-lg font-bold">${title}</h3><p class="text-sm text-gray-600 mt-1">${description}</p></div></div><div class="mt-4 bg-gray-50 p-4 rounded-lg"><p class="text-sm font-semibold italic" style="color:${themeColor}">"${question}"</p><div class="flex justify-center items-center space-x-2 mt-3">${starsHTML}</div></div></div>`;
+                return `<div class="bg-white/50 backdrop-blur-sm p-5 rounded-xl shadow-md border border-gray-200/50" data-card-index="${index}"><div class="flex items-start space-x-4"><div class="flex-shrink-0 w-12 h-12 text-white flex items-center justify-center rounded-full text-xl font-bold" style="background-color:${themeColor}">${level}</div><div class="flex-grow"><h3 class="text-lg font-bold">${title}</h3><p class="text-sm text-gray-600 mt-1">${description}</p></div></div><div class="mt-4 bg-gray-50 p-4 rounded-lg"><p class="text-sm font-semibold italic mb-3" style="color:${themeColor}">"${question}"</p><div class="flex justify-center items-center space-x-2">${freqHTML}</div></div></div>`;
             };
             
             const renderAllCards = () => {
                 skillLevelsContainer.innerHTML = currentAssessmentData.map(createSkillCardHTML).join('');
             };
             
-            const updateStarsUI = (index) => {
+            const updateFrequencyUI = (index) => {
                 const card = document.querySelector(`[data-card-index="${index}"]`);
                 if (!card) return;
-                const starButtons = card.querySelectorAll('.star-btn');
-                starButtons.forEach(button => {
-                    const rate = parseInt(button.dataset.rate, 10);
-                    const starIcon = button.querySelector('svg');
-                    starIcon.classList.toggle('text-yellow-400', scores[index] >= rate);
-                    starIcon.classList.toggle('fill-current', scores[index] >= rate);
-                    starIcon.classList.toggle('text-gray-300', scores[index] < rate);
+                const currentScore = scores[index];
+                const freqButtons = card.querySelectorAll('.freq-btn');
+                freqButtons.forEach(button => {
+                    button.classList.toggle('selected', parseInt(button.dataset.score) === currentScore);
                 });
             };
 
             const updateAverageScore = () => {
-                const totalScore = scores.reduce((sum, score) => sum + score, 0);
-                const skillsAssessed = scores.filter(score => score > 0).length;
-                const average = skillsAssessed > 0 ? (totalScore / skillsAssessed) : 0;
+                const skillsAssessed = scores.filter(score => score > 0);
+                if (skillsAssessed.length === 0) {
+                    averageScoreEl.textContent = "0.00";
+                    return;
+                }
+                const totalScore = skillsAssessed.reduce((sum, score) => sum + score, 0);
+                const average = totalScore / skillsAssessed.length;
                 averageScoreEl.textContent = average.toFixed(2);
             };
             
@@ -327,7 +352,7 @@
 
             const handleScoreChange = (index, newScore) => {
                 scores[index] = scores[index] === newScore ? 0 : newScore;
-                updateStarsUI(index);
+                updateFrequencyUI(index);
                 updateAverageScore();
                 if(skillChart) {
                     skillChart.data.datasets[0].data = scores;
@@ -392,9 +417,9 @@
             
             backToHomeBtn.addEventListener('click', goHome);
             skillLevelsContainer.addEventListener('click', (e) => {
-                const starButton = e.target.closest('.star-btn');
-                if (starButton) {
-                    handleScoreChange(parseInt(starButton.dataset.index, 10), parseInt(starButton.dataset.rate, 10));
+                const freqButton = e.target.closest('.freq-btn');
+                if (freqButton) {
+                    handleScoreChange(parseInt(freqButton.dataset.index), parseInt(freqButton.dataset.score));
                 }
             });
             submitBtn.addEventListener('click', handleSubmit);
@@ -403,4 +428,4 @@
         });
     </script>
 </body>
-</ht
+</html>
