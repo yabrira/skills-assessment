@@ -149,34 +149,38 @@
             <!-- Analysis Section -->
             <div id="analysisSection" class="hidden opacity-0 transform translate-y-4">
                 <div id="pdfContent">
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-                        <div class="bg-white rounded-2xl shadow-xl p-4 sm:p-6 border border-gray-200/80 flex flex-col">
-                            <h2 class="text-2xl font-bold text-center mb-2">Your Skill Profile</h2>
-                            <div class="chart-container flex-grow">
+                    <!-- Main Radar Chart Section -->
+                    <div class="bg-white rounded-2xl shadow-xl p-6 border border-gray-200/80 mb-8">
+                        <h2 class="text-3xl font-bold text-center mb-6">Your Skill Profile</h2>
+                        <div class="max-w-2xl mx-auto">
+                            <div class="chart-container" style="height: 500px;">
                                 <canvas id="skillRadarChart"></canvas>
                             </div>
-                            <div class="text-center mt-4 border-t border-gray-200 pt-4">
-                                <p class="font-semibold text-gray-700">
-                                    Average Score: <span id="averageScore" class="text-xl font-bold">0.00</span> / 5.00
+                            <div class="text-center mt-6 border-t border-gray-200 pt-6">
+                                <p class="text-lg font-semibold text-gray-700">
+                                    Average Score: <span id="averageScore" class="text-2xl font-bold">0.00</span> / 5.00
                                 </p>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Strengths and Development Areas Side by Side -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                         <div class="bg-white rounded-2xl shadow-xl p-6 border border-gray-200/80">
-                            <h2 class="text-2xl font-bold text-center mb-6">Personalized Coaching</h2>
-                            <div class="space-y-8">
-                                <div>
-                                    <h3 id="strengthsTitle" class="text-lg font-semibold mb-3 border-b-2 pb-2">Top Strengths</h3>
-                                    <ul id="strengthsContainer" class="space-y-4"></ul>
-                                </div>
-                                <div>
-                                    <h3 id="improvementsTitle" class="text-lg font-semibold mb-3 border-b-2 pb-2">Development Areas</h3>
-                                    <ul id="improvementsContainer" class="space-y-4"></ul>
-                                </div>
-                                <div id="coachingSection" class="hidden">
-                                    <h3 class="text-lg font-semibold mb-3 border-b-2 pb-2" style="border-color: var(--hibob-pink); color: var(--hibob-pink);">Personalized Coaching Plan</h3>
-                                    <div id="coachingContainer" class="space-y-4"></div>
-                                </div>
-                            </div>
+                            <h3 id="strengthsTitle" class="text-xl font-semibold mb-4 border-b-2 pb-3">Top Strengths</h3>
+                            <ul id="strengthsContainer" class="space-y-4"></ul>
+                        </div>
+                        <div class="bg-white rounded-2xl shadow-xl p-6 border border-gray-200/80">
+                            <h3 id="improvementsTitle" class="text-xl font-semibold mb-4 border-b-2 pb-3">Development Areas</h3>
+                            <ul id="improvementsContainer" class="space-y-4"></ul>
+                        </div>
+                    </div>
+
+                    <!-- Coaching Plan Section - Full Width -->
+                    <div id="coachingSection" class="hidden">
+                        <div class="bg-white rounded-2xl shadow-xl p-6 border border-gray-200/80">
+                            <h3 class="text-xl font-semibold mb-6 border-b-2 pb-3" style="border-color: var(--hibob-pink); color: var(--hibob-pink);">Personalized Coaching Plan</h3>
+                            <div id="coachingContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
                         </div>
                     </div>
                 </div>
@@ -235,46 +239,142 @@
                 }
             };
 
-            // Coaching recommendations informed by internal taxonomy and ethos
+            // Enhanced coaching recommendations with specific demo and discovery techniques
             const coachingRecommendations = {
                 discovery: {
                     highPerformer: [
-                        "Lead discovery training sessions for the team",
-                        "Create a 'discovery playbook' with your best practices",
-                        "Mentor junior team members on advanced discovery techniques",
-                        "Develop industry-specific discovery frameworks"
+                        {
+                            title: "Lead 'Pain to CBI' mapping workshops for the team",
+                            explanation: "Teach others how to systematically connect customer pain points to Critical Business Issues (CBIs). Create visual mapping exercises that show the relationship between operational challenges and strategic objectives."
+                        },
+                        {
+                            title: "Create a 'Discovery Question Library' with your most effective biased questions",
+                            explanation: "Document your most successful discovery questions that naturally lead prospects toward your solution's strengths. Organize them by industry, pain type, and conversation stage for easy reference."
+                        },
+                        {
+                            title: "Mentor others on 'Vision Re-engineering' techniques",
+                            explanation: "Help team members learn how to expand a prospect's initial vision by introducing additional capabilities they hadn't considered. Show them how to ask 'What if you could also...' questions."
+                        },
+                        {
+                            title: "Develop industry-specific 'Pain Quantification' frameworks",
+                            explanation: "Create templates and calculators that help prospects put specific numbers to their pain (time, money, resources). Build industry benchmarks and ROI models for different verticals."
+                        },
+                        {
+                            title: "Establish a 'Discovery Excellence' peer review program",
+                            explanation: "Set up regular sessions where team members review each other's discovery calls. Focus on technique application, question effectiveness, and pain-to-value progression."
+                        }
                     ],
                     developing: [
-                        "Practice active listening techniques in every call",
-                        "Create a checklist of discovery questions for different scenarios",
-                        "Record and review your discovery calls for improvement",
-                        "Shadow experienced team members during discovery sessions"
+                        {
+                            title: "Practice the 'Why-Why-Why' technique to explore pain deeply",
+                            explanation: "When a prospect mentions a pain, ask 'Why?' three times to uncover the root cause. This helps move from surface symptoms to underlying business drivers."
+                        },
+                        {
+                            title: "Use 'Broadening Questions' to connect individual pain to organizational impact",
+                            explanation: "Ask questions like 'Is your team the only one facing this?' to expand the scope from individual to departmental or company-wide impact."
+                        },
+                        {
+                            title: "Implement 'Impact Investigation' by asking 'What happens when this occurs?'",
+                            explanation: "After identifying a pain, explore its consequences by asking about the ripple effects on projects, timelines, costs, and other business areas."
+                        },
+                        {
+                            title: "Build a 'CBI Connection' template linking pain to strategic objectives",
+                            explanation: "Create a framework that helps connect operational pain points to the company's stated strategic goals from annual reports or press releases."
+                        },
+                        {
+                            title: "Create a 'Capability Definition' checklist for solution requirements",
+                            explanation: "Develop a structured approach to help prospects articulate what they need in their own words before you start showing features."
+                        }
                     ],
                     foundational: [
-                        "Start with basic discovery scripts and templates",
-                        "Focus on asking open-ended questions",
-                        "Practice summarizing customer needs back to them",
-                        "Build confidence through role-playing exercises"
+                        {
+                            title: "Master the 'Pain Identification' opener: 'What are your top 1-2 challenges?'",
+                            explanation: "Start every discovery call with this simple, open-ended question. It immediately moves the conversation from product features to business challenges."
+                        },
+                        {
+                            title: "Practice 'Active Listening' with follow-up questions like 'Tell me more'",
+                            explanation: "Show genuine interest by asking for more details when prospects share information. This builds rapport and uncovers deeper insights."
+                        },
+                        {
+                            title: "Use 'Recent Example' technique: 'Can you give me a recent example?'",
+                            explanation: "When prospects mention a problem, ask for a specific recent instance. This provides concrete context and makes the pain more tangible."
+                        },
+                        {
+                            title: "Build confidence with 'Pain Summary' technique: 'So what I hear is...'",
+                            explanation: "Summarize what you've learned back to the prospect. This confirms understanding and shows you're actively listening."
+                        },
+                        {
+                            title: "Start with 'Discovery Scripts' for consistent baseline performance",
+                            explanation: "Use prepared question sequences for different scenarios until you build confidence. Scripts provide structure while you develop natural discovery skills."
+                        }
                     ]
                 },
                 demo: {
                     highPerformer: [
-                        "Lead demo methodology training for the organization",
-                        "Create reusable demo templates and playbooks",
-                        "Mentor others on advanced demo techniques",
-                        "Develop customer story libraries for different industries"
+                        {
+                            title: "Lead 'Great Demo! Methodology' training sessions",
+                            explanation: "Teach the complete Great Demo! framework to your organization. Cover demo types, situation slides, value connections, and strategic questioning techniques."
+                        },
+                        {
+                            title: "Create 'Demo Type Differentiation' frameworks (Vision vs Technical Proof)",
+                            explanation: "Develop clear criteria for when to deliver vision generation demos versus technical proof demos. Create decision trees and audience assessment tools."
+                        },
+                        {
+                            title: "Mentor others on 'Strategic Questioning' during demos",
+                            explanation: "Help team members learn how to ask questions that highlight your solution's unique strengths and influence buying criteria."
+                        },
+                        {
+                            title: "Develop 'Customer Story Libraries' with Problem-Solution-Result format",
+                            explanation: "Create a repository of customer success stories organized by industry and use case. Each story should follow the Problem-Solution-Result structure for maximum impact."
+                        },
+                        {
+                            title: "Establish 'Demo Excellence' peer review and coaching programs",
+                            explanation: "Set up regular demo review sessions where team members analyze recordings together. Focus on technique application and improvement opportunities."
+                        }
                     ],
                     developing: [
-                        "Practice customizing demos for different audiences",
-                        "Build a collection of industry-specific examples",
-                        "Record and review your demos for improvement",
-                        "Seek feedback from peers on demo delivery"
+                        {
+                            title: "Practice 'Situation Slide' technique at demo start",
+                            explanation: "Begin every demo by stating the prospect's key challenge back to them and asking 'Is this correct?' This forces customization and confirms understanding."
+                        },
+                        {
+                            title: "Use 'Feature-to-Value' translation: '...which for you means...'",
+                            explanation: "For every major feature you show, explicitly connect it to tangible business outcomes. Example: 'This automation feature...which for you means reducing processing time by 50%.'"
+                        },
+                        {
+                            title: "Implement 'Question Exploration': 'What's driving that question?'",
+                            explanation: "When prospects ask detailed questions, explore the underlying reason before answering. This helps you provide more relevant responses and maintain control."
+                        },
+                        {
+                            title: "Build 'Industry Customization' with specific terminology and data",
+                            explanation: "Use industry-specific language, examples, and data points that resonate with the prospect's vertical. Create industry-specific demo environments and datasets."
+                        },
+                        {
+                            title: "Create 'Discovery Integration' by referencing specific customer insights",
+                            explanation: "Weave specific details from your discovery calls into the demo narrative. Reference their exact challenges, metrics, and goals throughout the presentation."
+                        }
                     ],
                     foundational: [
-                        "Master the basic demo flow and structure",
-                        "Practice with demo scripts and templates",
-                        "Focus on clear communication and presentation skills",
-                        "Build confidence through regular practice sessions"
+                        {
+                            title: "Master the 'Demo Agenda' co-creation technique",
+                            explanation: "Work with prospects to create a customized agenda for your demo. Ask them to prioritize topics and confirm the most valuable use of your time together."
+                        },
+                        {
+                            title: "Practice 'Basic Demo Flow' with clear structure and transitions",
+                            explanation: "Develop a consistent demo structure with smooth transitions between sections. Use clear signposts and summaries to keep the audience oriented."
+                        },
+                        {
+                            title: "Use 'Value Connection' for every major feature shown",
+                            explanation: "Don't just show features - explain why they matter. Connect each capability to business value, even if it's a simple benefit statement."
+                        },
+                        {
+                            title: "Build 'Audience Adaptation' skills for different personas",
+                            explanation: "Learn to adjust your demo style for different audiences (executive vs technical, business vs IT). Practice different approaches for each persona."
+                        },
+                        {
+                            title: "Start with 'Demo Scripts' and templates for consistency",
+                            explanation: "Use prepared demo scripts and templates until you build confidence. Scripts provide structure while you develop natural demo delivery skills."
+                        }
                     ]
                 }
             };
@@ -425,11 +525,11 @@
                     </li>`
                 ).join('');
 
-                // Show personalized coaching recommendations
+                // Show personalized coaching recommendations with explanations
                 coachingContainer.innerHTML = coachingItems.map(item => 
                     `<div class="coaching-card">
-                        <h4>📈 Next Steps</h4>
-                        <p class="text-sm text-gray-700">${item}</p>
+                        <h4>📈 ${item.title}</h4>
+                        <p class="text-sm text-gray-700">${item.explanation}</p>
                     </div>`
                 ).join('');
                 coachingSection.classList.remove('hidden');
